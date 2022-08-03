@@ -11,10 +11,13 @@ class TableViewController: UITableViewController {
 
 
     var data  = [Color ]()
+    
         override func viewDidLoad() {
             super.viewDidLoad()
             tableView.register(CustomCell.self, forCellReuseIdentifier: "cellId")
             tableView.estimatedRowHeight = UITableView.automaticDimension
+            
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "sort/random", style: .plain, target: self, action: #selector(handleSortButton))
             
             appendData()
         }
@@ -37,13 +40,20 @@ class TableViewController: UITableViewController {
             cell.card.backgroundColor = UIColor(data[indexPath.row])
             cell.card.setTitle(data[indexPath.row].description, for: .normal)
             
-            let tapGesture = xUITapGestureRecognizer(target: self, action: #selector(self.handleCardButton))
-                tapGesture.color = data[indexPath.row]
-            
-            cell.addGestureRecognizer(tapGesture)
+//            let tapGesture = xUITapGestureRecognizer(target: self, action: #selector(self.handleCardButton))
+//                tapGesture.color = data[indexPath.row]
+//
+//            cell.addGestureRecognizer(tapGesture)
             
             return cell
         }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let destination = DetailViewController(color: data[indexPath.row])
+        self.navigationController?.pushViewController(destination, animated: true)
+        
+    }
     
         @objc func handleCardButton(sender: UITapGestureRecognizer){
             var color : Color
@@ -64,35 +74,35 @@ class TableViewController: UITableViewController {
         }
     
     
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
-        lazy var stack : UIStackView = {
-            let st = UIStackView()
-            st.translatesAutoresizingMaskIntoConstraints = false
-            st.distribution = .fill
-            st.axis = .horizontal
-            st.alignment = .trailing
-            st.spacing  = 16
-            return st
-        }()
-        
-        lazy var btnRandom : UIButton = {
-            let btn = UIButton()
-            btn.translatesAutoresizingMaskIntoConstraints = false
-            btn.setTitleColor(.black, for: .normal)
-            btn.setTitle("sort/random", for: .normal)
-            btn.sizeToFit()
-            btn.addTarget(self, action: #selector(handleSortButton), for: .touchUpInside)
-            return btn
-        }()
-        
-        stack.addArrangedSubview(UIView())
-        stack.addArrangedSubview(btnRandom)
-        stack.widthAnchor.constraint(equalToConstant: tableView.frame.width - 16).isActive = true
-        stack.alignment = .trailing
-        
-        return stack
-    }
+//    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//
+//        lazy var stack : UIStackView = {
+//            let st = UIStackView()
+//            st.translatesAutoresizingMaskIntoConstraints = false
+//            st.distribution = .fill
+//            st.axis = .horizontal
+//            st.alignment = .trailing
+//            st.spacing  = 16
+//            return st
+//        }()
+//
+//        lazy var btnRandom : UIButton = {
+//            let btn = UIButton()
+//            btn.translatesAutoresizingMaskIntoConstraints = false
+//            btn.setTitleColor(.black, for: .normal)
+//            btn.setTitle("sort/random", for: .normal)
+//            btn.sizeToFit()
+//            btn.addTarget(self, action: #selector(handleSortButton), for: .touchUpInside)
+//            return btn
+//        }()
+//
+//        stack.addArrangedSubview(UIView())
+//        stack.addArrangedSubview(btnRandom)
+//        stack.widthAnchor.constraint(equalToConstant: tableView.frame.width - 16).isActive = true
+//        stack.alignment = .trailing
+//
+//        return stack
+//    }
     
     @objc func handleSortButton(){
         data.removeAll()
@@ -120,6 +130,8 @@ class TableViewController: UITableViewController {
         }
         return color
     }
+    
+    
     
 }
 
